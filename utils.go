@@ -22,9 +22,7 @@ func formatLog(f interface{}, v ...interface{}) string {
 			return msg
 		}
 		if strings.Contains(msg, "%") && !strings.Contains(msg, "%%") {
-			//format string
 		} else {
-			//do not contain format char
 			msg += strings.Repeat(" %v", len(v))
 		}
 	default:

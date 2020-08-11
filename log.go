@@ -73,6 +73,7 @@ func NewLogger() *Logger {
 	l.SetLevel(LevelError)
 	l.SetTimeFormat(defaultTimeFormat)
 	l.SetConsole()
+	l.SetTrimPath("src/")
 	return l
 }
 
@@ -114,64 +115,58 @@ func (l *Logger) Reset() *Logger {
 
 func (l *Logger) writeToLoggers(msg *loginfo, level int) {
 	// time level path content
-	msgStr := fmt.Sprintf("%s %s %s %s", msg.Time, msg.Level, msg.Path, msg.Content)
+	msgStr := fmt.Sprintf("%s %s%s %s", msg.Time, msg.Level, msg.Path, msg.Content)
 	for _, op := range l.outputs {
 		op.LogWrite(msgStr, level)
 	}
 }
 
-func (l *Logger) writeMsg(level int, msg string, v ...interface{}) {
+func (l *Logger) writeMsg(level int, format interface{}, v ...interface{}) {
 	if level > l.level && level < 0 {
 		return
 	}
 	msgSt := new(loginfo)
+	msg := formatLog(format, v...)
 	src := ""
 	if l.level == LevelDebug {
-		if len(v) > 0 {
-			msg = fmt.Sprintf(msg, v...)
-		}
-		_, file, lineno, ok := runtime.Caller(l.callDepth)
-		if l.usePath == "" {
-			l.usePath = "src/"
-		}
-		if ok {
+		if _, file, lineno, ok := runtime.Caller(l.callDepth); ok {
 			src = strings.Replace(
-				fmt.Sprintf("%s:%d", stringTrim(file, l.usePath), lineno), "%2e", ".", -1)
+				fmt.Sprintf(" %s:%d", stringTrim(file, l.usePath), lineno), "%2e", ".", -1)
 		}
 	}
+	msgSt.Time = time.Now().Format(l.timeFormat)
 	msgSt.Level = LevelMap[level]
 	msgSt.Path = src
 	msgSt.Content = msg
-	msgSt.Time = time.Now().Format(l.timeFormat)
 	l.writeToLoggers(msgSt, level)
 }
 
 // Success Log SUCCESS level message.
-func (l *Logger) Success(format string, v ...interface{}) {
+func (l *Logger) Success(format interface{}, v ...interface{}) {
 	l.writeMsg(LevelSuccess, format, v...)
 }
 
 // Failed Log FAILED level message.
-func (l *Logger) Failed(format string, v ...interface{}) {
+func (l *Logger) Failed(format interface{}, v ...interface{}) {
 	l.writeMsg(LevelFailed, format, v...)
 }
 
 // Normal Log NORMAL level message.
-func (l *Logger) Normal(format string, v ...interface{}) {
+func (l *Logger) Normal(format interface{}, v ...interface{}) {
 	l.writeMsg(LevelNormal, format, v...)
 }
 
 // Panic -
-func (l *Logger) Panic(format string, v ...interface{}) {
-	panic(fmt.Sprintf(format, v...))
+func (l *Logger) Panic(format interface{}, v ...interface{}) {
+	panic(formatLog(format, v))
 }
 
 // Error Log ERROR level message.
-func (l *Logger) Error(format string, v ...interface{}) {
+func (l *Logger) Error(format interface{}, v ...interface{}) {
 	l.writeMsg(LevelError, format, v...)
 }
 
 // Debug Log DEBUG level message.
-func (l *Logger) Debug(format string, v ...interface{}) {
+func (l *Logger) Debug(format interface{}, v ...interface{}) {
 	l.writeMsg(LevelDebug, format, v...)
 }
