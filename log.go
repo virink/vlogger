@@ -29,8 +29,8 @@ var LevelMap = map[int]string{
 }
 
 const (
-	defaultTimeFormat = "15:04:05"            // 日志输出默认格式
-	fullTimeFormat    = "2006-01-02 15:04:05" // 日志输出默认格式
+	defaultTimeFormat = "15:04:05" // 日志输出默认格式
+	fullTimeFormat    = "2006-01-02 15:04:05"
 )
 
 // Adapter ID
