@@ -13,14 +13,8 @@ func testConsoleCalls(bl *Logger) {
 }
 
 func TestConsole(t *testing.T) {
-	log1 := NewLogger()
-	testConsoleCalls(log1)
-	log2 := NewLogger().SetLevel(LevelDebug)
-	testConsoleCalls(log2)
-}
-
-// Test console without color
-func TestNoColorConsole(t *testing.T) {
-	log := NewLogger()
+	log := NewLogger().SetLevel(LevelDebug)
+	testConsoleCalls(log)
+	log.SetLevel(LevelError)
 	testConsoleCalls(log)
 }

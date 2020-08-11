@@ -1,6 +1,7 @@
 package vlogger
 
 import (
+	"fmt"
 	"os"
 	"runtime"
 	"sync"
@@ -9,10 +10,8 @@ import (
 type brush func(string) string
 
 func newBrush(color string) brush {
-	pre := "\033["
-	reset := "\033[0m"
 	return func(text string) string {
-		return pre + color + "m" + text + reset
+		return fmt.Sprintf("\033[%sm%s\033[0m", color, text)
 	}
 }
 
@@ -29,21 +28,10 @@ type consoleLogger struct {
 	sync.Mutex
 	Level    int  `json:"level"`
 	Colorful bool `json:"color"`
-	LogLevel string
 }
 
 func (c *consoleLogger) Init() {
 	c.Level = LevelError
-	if runtime.GOOS == "windows" {
-		c.Colorful = false
-	}
-	c.LogLevel = LevelMap[c.Level]
-}
-
-func (c *consoleLogger) Debug() {
-	c.Level = LevelDebug
-	c.LogLevel = LevelMap[c.Level]
-	return
 }
 
 func (c *consoleLogger) LogWrite(msgText interface{}, level int) error {
@@ -54,7 +42,7 @@ func (c *consoleLogger) LogWrite(msgText interface{}, level int) error {
 	if !ok {
 		return nil
 	}
-	if c.Colorful {
+	if runtime.GOOS != "windows" {
 		msg = colors[level](msg)
 	}
 	c.printlnConsole(msg)
@@ -63,8 +51,8 @@ func (c *consoleLogger) LogWrite(msgText interface{}, level int) error {
 
 func (c *consoleLogger) Destroy() {}
 
-func (c *consoleLogger) ID() int {
-	return AdapterConsole
+func (c *consoleLogger) SetLevel(level int) {
+	c.Level = level
 }
 
 func (c *consoleLogger) printlnConsole(msg string) {
@@ -79,8 +67,7 @@ func (l *Logger) SetConsole() *Logger {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 	l.outputs[AdapterConsole] = &consoleLogger{
-		Level:    LevelError,
-		Colorful: runtime.GOOS != "windows",
+		Level: l.level,
 	}
 	return l
 }

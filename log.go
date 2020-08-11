@@ -52,7 +52,7 @@ type LoggerAdapter interface {
 	Init()
 	LogWrite(msg interface{}, level int) error
 	Destroy()
-	ID() int
+	SetLevel(level int)
 }
 
 // Logger -
@@ -79,6 +79,9 @@ func NewLogger() *Logger {
 // SetLevel -
 func (l *Logger) SetLevel(level int) *Logger {
 	l.level = level
+	for op := range l.outputs {
+		l.outputs[op].SetLevel(level)
+	}
 	return l
 }
 
