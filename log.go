@@ -69,7 +69,7 @@ type Logger struct {
 func NewLogger() *Logger {
 	l := new(Logger)
 	l.outputs = make(map[int]LoggerAdapter)
-	l.SetCallDepth(3)
+	l.SetCallDepth(2)
 	l.SetLevel(LevelError)
 	l.SetTimeFormat(defaultTimeFormat)
 	l.SetConsole()
@@ -122,6 +122,7 @@ func (l *Logger) writeToLoggers(msg *loginfo, level int) {
 }
 
 func (l *Logger) writeMsg(level int, format interface{}, v ...interface{}) {
+	fmt.Println(l)
 	if level > l.level && level < 0 {
 		return
 	}
