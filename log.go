@@ -122,7 +122,6 @@ func (l *Logger) writeToLoggers(msg *loginfo, level int) {
 }
 
 func (l *Logger) writeMsg(level int, format interface{}, v ...interface{}) {
-	fmt.Println(l)
 	if level > l.level && level < 0 {
 		return
 	}
