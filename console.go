@@ -34,6 +34,7 @@ func (c *consoleLogger) Init() {
 	c.Level = LevelError
 }
 
+// LogWrite LogWrite
 func (c *consoleLogger) LogWrite(msgText interface{}, level int) error {
 	if level > c.Level {
 		return nil
@@ -49,6 +50,7 @@ func (c *consoleLogger) LogWrite(msgText interface{}, level int) error {
 	return nil
 }
 
+// Destroy Destroy
 func (c *consoleLogger) Destroy() {}
 
 func (c *consoleLogger) SetLevel(level int) {

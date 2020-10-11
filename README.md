@@ -2,7 +2,7 @@
 
 convenient log package
 
-# 1. 使用说明
+## 1. 使用说明
 ```go
     import  "github.com/virink/vlogger"
 
@@ -16,7 +16,7 @@ convenient log package
 ```
 输出结果：
 
-# 2. 日志等级
+## 2. 日志等级
 
 等级由高到底，当配置为某个输出等级时，只有大于等于该等级的日志才会输出。不同的输出适配器支持不同的日志等级配置：
 
@@ -29,4 +29,6 @@ convenient log package
 | 3    | FAILED  | 失败     | 紫色       |
 | 4    | DEBUG   | 调试     | 黄色       |
 
+## LICENSE
 
+[MIT LICENSE](LICENSE)

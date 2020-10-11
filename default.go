@@ -7,7 +7,7 @@ func init() {
 	defaultLogger = NewLogger()
 }
 
-// Reset will remove all the adapter
+// Reset Reset
 func Reset() {
 	defaultLogger.Reset()
 }

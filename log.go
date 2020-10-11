@@ -13,9 +13,9 @@ const (
 	LevelSuccess = iota // 成功
 	LevelFailed         // 失败
 	LevelNormal         // 普通
-	LevelPanic          // 系统错误
 	LevelError          // 用户错误
 	LevelDebug          // 用户级调试
+	LevelPanic          // 系统错误
 )
 
 // LevelMap 日志等级和描述映射关系
@@ -23,9 +23,9 @@ var LevelMap = map[int]string{
 	LevelSuccess: "[+]",
 	LevelFailed:  "[-]",
 	LevelNormal:  "[*]",
-	LevelPanic:   "[~]",
 	LevelError:   "[!]",
 	LevelDebug:   "[#]",
+	LevelPanic:   "[~]",
 }
 
 const (
@@ -65,7 +65,7 @@ type Logger struct {
 	outputs    map[int]LoggerAdapter
 }
 
-// NewLogger -
+// NewLogger Create New Logger
 func NewLogger() *Logger {
 	l := new(Logger)
 	l.outputs = make(map[int]LoggerAdapter)
@@ -77,7 +77,7 @@ func NewLogger() *Logger {
 	return l
 }
 
-// SetLevel -
+// SetLevel Set Level
 func (l *Logger) SetLevel(level int) *Logger {
 	l.level = level
 	for op := range l.outputs {
@@ -86,25 +86,25 @@ func (l *Logger) SetLevel(level int) *Logger {
 	return l
 }
 
-// SetTimeFormat -
+// SetTimeFormat Set Time Format
 func (l *Logger) SetTimeFormat(timeFormat string) *Logger {
 	l.timeFormat = timeFormat
 	return l
 }
 
-// SetTrimPath 设置日志起始路径
+// SetTrimPath Set Trim Path
 func (l *Logger) SetTrimPath(trimPath string) *Logger {
 	l.usePath = trimPath
 	return l
 }
 
-// SetCallDepth -
+// SetCallDepth Set Call Depth
 func (l *Logger) SetCallDepth(depth int) *Logger {
 	l.callDepth = depth
 	return l
 }
 
-// Reset -
+// Reset Reset
 func (l *Logger) Reset() *Logger {
 	for _, l := range l.outputs {
 		l.Destroy()
